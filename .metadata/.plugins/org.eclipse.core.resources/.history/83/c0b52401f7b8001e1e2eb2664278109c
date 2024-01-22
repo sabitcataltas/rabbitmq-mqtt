@@ -1,0 +1,5 @@
+package com.sabit.rabbitmqmqtt;
+
+public class ChartController {
+
+}

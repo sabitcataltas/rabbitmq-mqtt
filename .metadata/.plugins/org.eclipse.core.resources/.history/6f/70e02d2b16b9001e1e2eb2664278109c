@@ -1,0 +1,49 @@
+package com.sabit.rabbitmqmqtt;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import org.springframework.data.redis.core.RedisHash;
+
+@RedisHash("DeviceData")
+public class DeviceData implements Serializable {
+
+	private Long id;
+	private String clientId;
+	private LocalDateTime time;
+	private BigDecimal value;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	public LocalDateTime getTime() {
+		return time;
+	}
+
+	public void setTime(LocalDateTime time) {
+		this.time = time;
+	}
+
+	public BigDecimal getValue() {
+		return value;
+	}
+
+	public void setValue(BigDecimal value) {
+		this.value = value;
+	}
+
+}

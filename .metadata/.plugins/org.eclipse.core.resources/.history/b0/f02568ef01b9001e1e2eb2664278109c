@@ -1,0 +1,117 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Google Charts Example - Spring Boot</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script type="text/javascript"
+	src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+	<div align="center" style="width: 1000px;">
+		<h2>Spring Boot Google Charts Example</h2>
+		<div id="curve_chart" style="width: 900px; height: 500px"></div>
+	</div>
+	<script th:inline="javascript">
+		var real_data = /*[[${chartData}]]*/'noValue';
+		$(document).ready(function() {
+			google.charts.load('current', {
+				packages : [ 'corechart', 'bar' ]
+			});
+			google.charts.setOnLoadCallback(drawChart);
+		});
+		function fill(chart, options) {
+			var json_prepared = new Array();
+			$.ajax({
+				url : 'http://localhost/data.php',
+				type : 'POST',
+				async : false,
+				dataType : 'json'
+			}).done(function(res) {
+				// console.log(res);
+				console.log("success");
+				for (var i = res.length - 1; i >= 0; i--) {
+					var ano = res[i][0];
+					var mes = res[i][1];
+					var dia = res[i][2];
+					var hora = res[i][3];
+					var fecha = new Date(ano, mes, dia);
+					var elemento = new Array(fecha, hora);
+					json_prepared.push(elemento);
+				}
+			}).fail(function() {
+				console.log("error");
+			}).always(function() {
+				console.log("complete");
+			});
+			var data = new google.visualization.DataTable();
+			data.addColumn('date', 'Alertas');
+			data.addColumn('number', 'Alertas');
+			console.log(json_prepared);
+			data.addRows(json_prepared);
+			chart.draw(data, google.charts.Scatter.convertOptions(options));
+			console.log('actualizado');
+		}
+		function drawChart() {
+			 $.ajax({
+			        url: 'http://localhost/data.php',
+			        type: 'POST',
+			        dataType: 'json',
+			    })
+			 .done(function(res) {
+        var json_prepared = new Array();        
+        console.log("success");
+        for (var i = res.length - 1; i >= 0; i--) {
+            var ano = res[i][0];
+            var mes = res[i][1];
+            var dia = res[i][2];
+            var hora = res[i][3];
+            var fecha = new Date(ano,mes,dia);
+            var elemento  = new Array(fecha,hora);
+            json_prepared.push(elemento);
+        }
+        var data = new google.visualization.DataTable();
+        data.addColumn('date', 'Date');
+        data.addColumn('number', 'Datas');
+            console.log(json_prepared);
+             data.addRows(json_prepared);
+        var options = {
+          width: 800,
+          height: 650,
+          chart: {
+            title: 'Students\' Final Grades',
+            subtitle: 'based on hours studied'
+          },    
+          hAxis: {
+                 title: "Date",
+          },
+          vAxis: {
+            title: "Houar"         
+          }
+        };
+			var data = new google.visualization.DataTable();
+			data.addColumn('string', 'Year');
+			data.addColumn('number', 'Views');
+
+			Object.keys(real_data).forEach(function(key) {
+				data.addRow([ key, real_data[key] ]);
+			});
+
+			var options = {
+				title : 'Devices values',
+				legend : {
+					position : 'bottom'
+				}
+			};
+
+			var chart = new google.visualization.LineChart(document
+					.getElementById('curve_chart'));
+
+			chart.draw(data, options);
+		}
+	</script>
+</body>
+</html>

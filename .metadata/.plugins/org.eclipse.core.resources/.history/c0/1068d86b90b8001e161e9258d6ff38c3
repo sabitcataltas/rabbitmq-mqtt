@@ -1,0 +1,23 @@
+package com.sabit.rabbitmqmqtt;
+
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class TopicController {
+
+	@Autowired
+	private RabbitTemplate rabbitTemplate;
+
+	@GetMapping("/topic/publish/{message}")
+	public ResponseEntity publish(@PathVariable String topic, @PathVariable String message) {
+		rabbitTemplate.send(RabbitMQConfig.QUEUE, RabbitMQConfig.ROUTING_KEY, new Message(message.getBytes()));
+		return ResponseEntity.ok(null);
+	}
+
+}

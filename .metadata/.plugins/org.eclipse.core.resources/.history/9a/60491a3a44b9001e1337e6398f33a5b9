@@ -1,0 +1,20 @@
+package com.sabit.rabbitmqmqtt;
+
+import java.util.Queue;
+
+import org.apache.commons.collections4.queue.CircularFifoQueue;
+import org.springframework.stereotype.Service;
+
+@Service
+public class DeviceDataRepository {
+
+	private Queue<DeviceData> queue = new CircularFifoQueue<DeviceData>(30);
+
+	public void add(DeviceData data) {
+		this.queue.add(data);
+	}
+
+	public void add(String clientId, Double value) {
+		this.queue.add(new DeviceData(clientId, System.currentTimeMillis(), Double.valueOf(value)));
+	}
+}

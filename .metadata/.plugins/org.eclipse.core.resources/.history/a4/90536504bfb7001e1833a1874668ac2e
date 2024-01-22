@@ -1,0 +1,22 @@
+package com.sabit.rabbitmqmqtt;
+
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.Queue;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class RabbitMQConfig {
+	
+	public static String QUEUE = "exampleQueue";
+
+	@Bean
+	public Queue createQueue() {
+		return new Queue(QUEUE);
+	}
+
+	@Bean
+	public Binding createBindingBetweenQueueAndMqttTopic() {
+		return new Binding(QUEUE, Binding.DestinationType.QUEUE, "amq.topic", "bindingKey", null);
+	}
+}
